@@ -19,70 +19,68 @@ typedef long long ll;
 class uf {
 public:
   vector<int> par;
-  uf(int n): par(n){
+  uf(int n): par(n) {
     REP(i,0,n) {
       par[i] = i;
     }
   }
-  void unite(int, int);
-  int find(int);
-  bool same(int, int);
+  int find(int x) {
+    if(par[x] == x) {
+      return x;
+    }
+    return par[x] = find(par[x]);
+  }
+  void unite(int x, int y) {
+    par[find(x)] = find(y);
+  }
+  bool same(int x, int y) {
+    return find(x) == find(y);
+  }
 };
 
-void uf::unite(int x, int y) {
-  par[find(x)] = y;
-}
-int uf::find(int x) {
-  if(par[x] == x) {
-    return x;
-  }
-  return par[x] = find(par[x]);
-}
-bool uf::same(int x, int y) {
-  return find(x) == find(y);
-}
-
-struct cp {
+struct c {
   int x, y;
   vector<int> nb;
   bool alive;
 };
 
 int main() {
-  int N, d;
-  cin >> N >> d;
-  vector<cp> cps(N+1);
-  uf u(N+1);
-  REP(i,1,N+1) {
-    cin >> cps[i].x >> cps[i].y;
-    cps[i].alive = false;
+  int n, d;
+  cin >> n >> d;
+  vector<c> cs(n+1);
+  REP(i,1,n+1) {
+    cin >> cs[i].x >> cs[i].y;
+    cs[i].alive = false;
   }
-  REP(i,1,N+1) {
-    REP(j,i+1,N+1) {
-      if((cps[i].x-cps[j].x)*(cps[i].x-cps[j].y) +
-         (cps[i].y-cps[j].y)*(cps[i].y-cps[j].y) <= d*d) {
-        cps[i].nb.push_back(j);
-        cps[j].nb.push_back(i);
+  REP(i,1,n+1) {
+    REP(j,i+1,n+1) {
+      if((cs[i].x-cs[j].x)*(cs[i].x-cs[j].x) +
+         (cs[i].y-cs[j].y)*(cs[i].y-cs[j].y) <= d*d) {
+        cs[i].nb.push_back(j);
+        cs[j].nb.push_back(i);
       }
     }
   }
-  string op;
-  while(cin >> op) {
-    if(op == "O") {
-      int r;
-      cin >> r;
-      cps[r].alive = true;
-      REP(i,0,cps[r].nb.size()) {
-        int x = cps[r].nb[i];
-        if(cps[x].alive) {
-          u.unite(r, x);
+  uf u(n+1);
+  string s;
+  while(cin >> s) {
+    if(s == "O") {
+      int p;
+      cin >> p;
+      cs[p].alive = true;
+      int l = cs[p].nb.size();
+      REP(i,0,l) {
+        int q = cs[p].nb[i];
+        if(cs[q].alive) {
+          u.unite(p, q);
         }
       }
-    } else if(op == "S") {
+    } else {
       int p, q;
       cin >> p >> q;
       cout << (u.same(p, q) ? "SUCCESS" : "FAIL") << endl;
     }
   }
+
   return 0;
 }
