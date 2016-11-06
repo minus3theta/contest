@@ -62,6 +62,7 @@ int main() {
     dp[0][r[0]] = 0;
     REP(i,1,Z) {
       REP(j,1,N+1) {
+        dp[i][j] = dp[i-1][j] + cost[r[i-1]][r[i]].first;
         REP(k,1,N+1) {
           dp[i][j] = min(dp[i][j], dp[i-1][k] + cost[r[i-1]][k].first +
                          cost[k][j].second + cost[j][r[i]].first);
