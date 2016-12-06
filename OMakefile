@@ -2,7 +2,7 @@
 
 CXXFLAGS += -O2 -g -Wall
 
-.SUBDIRS: poj
+.SUBDIRS: aoj poj
 	include BuildInfo
 	foreach(targ, $(targs))
 		CXXProgram($(targ), $(targ))
