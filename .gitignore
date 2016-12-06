@@ -2,4 +2,9 @@
 !*/
 !*.*
 !/*/Makefile
+!OMakefile
+!OMakeroot
 *.txt
+.omakedb*
+*.omc
+*.o

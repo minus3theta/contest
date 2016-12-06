@@ -1,0 +1,11 @@
+CXXFLAGS += -std=c++98
+
+targs[] = $(rootname $(glob *.cpp))
+
+foreach(targ, $(targs))
+	CXXProgram($(targ), $(targ))
+
+.DEFAULT: $(targs)
+
+clean:
+	rm -f *.o $(targs)
