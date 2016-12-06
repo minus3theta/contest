@@ -1,5 +1,13 @@
 .PHONY: all clean
 
-.SUBDIRS: poj
-
 CXXFLAGS += -O2 -g -Wall
+
+.SUBDIRS: poj
+	include BuildInfo
+	foreach(targ, $(targs))
+		CXXProgram($(targ), $(targ))
+
+	.DEFAULT: $(targs)
+
+	clean:
+		rm -f *.o $(targs)
