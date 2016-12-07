@@ -11,3 +11,5 @@ CXXFLAGS += -O2 -g -Wall
 
 	clean:
 		rm -f *.o $(targs)
+
+.SUBDIRS: atcoder
