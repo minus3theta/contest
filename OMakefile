@@ -4,6 +4,7 @@ CXXFLAGS += -O2 -g -Wall
 
 .SUBDIRS: aoj poj
 	include BuildInfo
+	targs[] = $(rootname $(glob *.cpp))
 	foreach(targ, $(targs))
 		CXXProgram($(targ), $(targ))
 
