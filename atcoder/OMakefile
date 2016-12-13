@@ -2,11 +2,11 @@ CXXFLAGS += -std=gnu++1y
 
 .SUBDIRS: $(glob D, *)
 	.SUBDIRS: $(glob D, *)
-		targs[] = $(rootname $(glob *.cpp))
-		foreach(targ, $(targs))
-			CXXProgram($(targ), $(targ))
+		targs = $(rootname $(glob *.cpp))
+		$(targs): %: %.cpp
+			$(CXX) $(CXXFLAGS) -o $@ $<
 
-		.DEFAULT: $(targs)
+		all: $(targs)
 
 		clean:
 			rm -f *.o $(targs)

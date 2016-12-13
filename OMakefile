@@ -1,16 +1,18 @@
 .PHONY: all clean
 
-CXXFLAGS += -O2 -g -Wall
+CXXFLAGS = -O2 -g -Wall
 
 .SUBDIRS: aoj poj
 	include BuildInfo
-	targs[] = $(rootname $(glob *.cpp))
-	foreach(targ, $(targs))
-		CXXProgram($(targ), $(targ))
+	targs = $(rootname $(glob *.cpp))
+	$(targs): %: %.cpp
+		$(CXX) $(CXXFLAGS) -o $@ $<
 
-	.DEFAULT: $(targs)
+	all: $(targs)
 
 	clean:
 		rm -f *.o $(targs)
 
 .SUBDIRS: atcoder
+
+.DEFAULT: all
