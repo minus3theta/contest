@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <climits>
 #include <cassert>
+#include <cmath>
 #include <iostream>
 #include <iomanip>
 #include <string>
