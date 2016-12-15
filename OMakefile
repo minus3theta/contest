@@ -11,7 +11,9 @@ CXXFLAGS = -O2 -g -Wall
 	all: $(targs)
 
 	clean:
-		rm -f *.o $(targs)
+		rm -f $(targs)
+
+	.DEFAULT: all
 
 .SUBDIRS: atcoder
 

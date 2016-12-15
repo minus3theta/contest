@@ -9,4 +9,8 @@ CXXFLAGS += -std=gnu++1y
 		all: $(targs)
 
 		clean:
-			rm -f *.o $(targs)
+			rm -f $(targs)
+
+		.DEFAULT: all
+
+	.DEFAULT: all
