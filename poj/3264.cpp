@@ -23,51 +23,58 @@ typedef pair<ll,ll> PL;
 typedef vector<int> VI;
 typedef vector<ll> VL;
 
-template <class T, T def, class Select>
+template <class T, class Op = T (*) (T,T)>
 struct segtree {
   int n;
   vector<T> dat;
-  Select sel;
-  segtree(int al, Select sel = Select()) {
+  Op op;
+  T unit;
+  segtree(int al, Op op, T unit) : op(op), unit(unit) {
     n = 1;
     while(n < al) {
       n *= 2;
     }
-    dat = vector<T>(2 * n - 1, def);
-    this->sel = sel;
+    dat = vector<T>(2 * n - 1, unit);
+  }
+  segtree(const vector<T> &arr, Op op, T unit) : op(op), unit(unit) {
+    int al = arr.size();
+    n = 1;
+    while(n < al) {
+      n *= 2;
+    }
+    dat = vector<T>(2 * n - 1, unit);
+    copy(arr.begin(), arr.end(), dat.begin() + n - 1);
+    for(int i=n-2; i >= 0; i--) {
+      dat[i] = op(dat[i * 2 + 1], dat[i * 2 + 2]);
+    }
   }
   void update(int k, T a) {
     k += n - 1;
     dat[k] = a;
     while(k > 0) {
       k = (k - 1) / 2;
-      dat[k] = sel(dat[k * 2 + 1], dat[k * 2 + 2]);
+      dat[k] = op(dat[k * 2 + 1], dat[k * 2 + 2]);
     }
   }
   T query(int a, int b, int k = 0, int l = 0, int r = -1) {
     if(r < 0) r = n;
-    if(r <= a || b <= l) return def;
+    if(r <= a || b <= l) return unit;
     if(a <= l && r <= b) return dat[k];
     T vl = query(a, b, k * 2 + 1, l, (l + r) / 2);
     T vr = query(a, b, k * 2 + 2, (l + r) / 2, r);
-    return sel(vl, vr);
+    return op(vl, vr);
   }
 };
 
-struct lmin {
-  ll operator()(const ll &a, const ll &b) {
-    return min(a, b);
-  }
-};
+ll lmin(ll a, ll b) {
+  return min(a, b);
+}
 
-struct lmax {
-  ll operator()(const ll &a, const ll &b) {
-    return max(a, b);
-  }
-};
+ll lmax(ll a, ll b) {
+  return max(a, b);
+}
 
 int main() {
-  // ios::sync_with_stdio(false);
   int N, Q;
   assert(scanf("%d %d", &N, &Q) == 2);
   VL h(N);
@@ -78,12 +85,8 @@ int main() {
   REP(i,0,Q) {
     assert(scanf("%d %d", &qry[i].first, &qry[i].second) == 2);
   }
-  segtree<ll, 1LL << 62, lmin> mintree(N);
-  segtree<ll, -(1LL << 62), lmax> maxtree(N);
-  REP(i,0,N) {
-    mintree.update(i, h[i]);
-    maxtree.update(i, h[i]);
-  }
+  segtree<ll> mintree(h, lmin, 1LL << 62);
+  segtree<ll> maxtree(h, lmax, -(1LL << 62));
   REP(i,0,Q) {
     ll lb = mintree.query(qry[i].first - 1, qry[i].second);
     ll ub = maxtree.query(qry[i].first - 1, qry[i].second);
