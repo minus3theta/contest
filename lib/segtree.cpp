@@ -1,17 +1,16 @@
-template <class T, class Op = T (*) (T,T)>
+template <class T, class Op, T unit>
 struct Segtree {
   int n;
   vector<T> dat;
   Op op;
-  T unit;
-  segtree(int al, Op op, T unit) : op(op), unit(unit) {
+  Segtree(int al) {
     n = 1;
     while(n < al) {
       n *= 2;
     }
     dat = vector<T>(2 * n - 1, unit);
   }
-  segtree(const vector<T> &arr, Op op, T unit) : op(op), unit(unit) {
+  Segtree(const vector<T> &arr) {
     int al = arr.size();
     n = 1;
     while(n < al) {

@@ -23,20 +23,19 @@ typedef pair<ll,ll> PL;
 typedef vector<int> VI;
 typedef vector<ll> VL;
 
-template <class T, class Op = T (*) (T,T)>
-struct segtree {
+template <class T, class Op, T unit>
+struct Segtree {
   int n;
   vector<T> dat;
   Op op;
-  T unit;
-  segtree(int al, Op op, T unit) : op(op), unit(unit) {
+  Segtree(int al) {
     n = 1;
     while(n < al) {
       n *= 2;
     }
     dat = vector<T>(2 * n - 1, unit);
   }
-  segtree(const vector<T> &arr, Op op, T unit) : op(op), unit(unit) {
+  Segtree(const vector<T> &arr) {
     int al = arr.size();
     n = 1;
     while(n < al) {
@@ -66,13 +65,17 @@ struct segtree {
   }
 };
 
-ll lmin(ll a, ll b) {
-  return min(a, b);
-}
+struct lmin {
+  ll operator()(ll a, ll b) {
+    return min(a, b);
+  }
+};
 
-ll lmax(ll a, ll b) {
-  return max(a, b);
-}
+struct lmax {
+  ll operator()(ll a, ll b) {
+    return max(a, b);
+  }
+};
 
 int main() {
   int N, Q;
@@ -85,8 +88,8 @@ int main() {
   REP(i,0,Q) {
     assert(scanf("%d %d", &qry[i].first, &qry[i].second) == 2);
   }
-  segtree<ll> mintree(h, lmin, 1LL << 62);
-  segtree<ll> maxtree(h, lmax, -(1LL << 62));
+  Segtree<ll, lmin, 1LL << 62> mintree(h);
+  Segtree<ll, lmax, -(1LL << 62)> maxtree(h);
   REP(i,0,Q) {
     ll lb = mintree.query(qry[i].first - 1, qry[i].second);
     ll ub = maxtree.query(qry[i].first - 1, qry[i].second);
