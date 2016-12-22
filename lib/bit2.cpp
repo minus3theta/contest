@@ -1,29 +1,25 @@
 // 2-dimensional BIT
 // 1-indexed
+template <class T, class Op, T unit>
 struct Bit2 {
-  int n;
-  vector<VI> dat;
-  Bit(int n) : n(n), dat(n + 1, VI(n + 1, 0)) {
+  int m, n;
+  vector<vector<T> > dat;
+  Op op;
+  Bit2(int m, int n) : m(m), n(n), dat(m + 1, vector<T>(n + 1, unit)) {
   }
-  void operate(int k, int l0, int a) {
-    while(k <= n) {
-      int l = l0;
-      while(l <= n) {
-        dat[k][l] += a;
-        l += l & -l;
+  void operate(int k0, int l0, T a) {
+    for(int k=k0; k <= m; k += k&-k) {
+      for(int l=l0; l <= n; l += l&-l) {
+        dat[k][l] = op(dat[k][l], a);
       }
-      k += k & -k;
     }
   }
-  int accum(int k, int l0) {
-    int sum = 0;
-    while(k > 0) {
-      int l = l0;
-      while(l > 0) {
-        sum += dat[k][l];
-        l -= l & -l;
+  T accum(int k0, int l0) {
+    T sum = unit;
+    for(int k=k0; k > 0; k -= k&-k) {
+      for(int l=l0; l > 0; l -= l&-l) {
+        sum = op(sum, dat[k][l]);
       }
-      k -= k & -k;
     }
     return sum;
   }
