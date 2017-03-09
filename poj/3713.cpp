@@ -24,6 +24,8 @@ typedef pair<ll,ll> PL;
 typedef vector<int> VI;
 typedef vector<ll> VL;
 
+const int LEVEL = 3;
+
 struct edge {
   int to, cap, rev;
   bool is_rev;
@@ -68,6 +70,9 @@ public:
         return flow;
       }
       flow += f;
+      if(flow >= LEVEL) {
+        return flow;
+      }
     }
   }
   void reset() {
@@ -98,10 +103,9 @@ int main() {
     bool ans = true;
     REP(i,0,N) {
       if(!ans) break;
-      REP(j,0,N) {
-        if(i == j) continue;
+      REP(j,0,i) {
         g.reset();
-        if(g.max_flow(i * 2 + 1, j * 2) < 3) {
+        if(g.max_flow(i * 2 + 1, j * 2) < LEVEL) {
           ans = false;
           break;
         }
