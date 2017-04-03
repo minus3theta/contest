@@ -2,9 +2,14 @@ CXXFLAGS += -std=gnu++1y
 
 .SUBDIRS: $(glob D, *)
 	.SUBDIRS: $(glob D, *)
-		targs = $(rootname $(glob *.cpp))
-		$(targs): %: %.cpp
+		cxxtargs = $(rootname $(glob i, *.cpp))
+		rstargs = $(rootname $(glob i, *.rs))
+		targs = $(cxxtargs) $(rstargs)
+		$(cxxtargs): %: %.cpp
 			$(CXX) $(CXXFLAGS) -o $@ $<
+
+		$(rstargs): %: %.rs
+			rustc $<
 
 		all: $(targs)
 
