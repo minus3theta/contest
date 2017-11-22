@@ -1,17 +1,18 @@
 // 0-indexed
-template <class T, class Op, T unit>
+template <class T, class Op = T (*) (T, T)>
 struct Segtree {
   int n;
   vector<T> dat;
   Op op;
-  Segtree(int al) {
+  T unit;
+  Segtree(int al, Op op, T unit): op(op), unit(unit) {
     n = 1;
     while(n < al) {
       n *= 2;
     }
     dat = vector<T>(2 * n - 1, unit);
   }
-  Segtree(const vector<T> &arr) {
+  Segtree(const vector<T> &arr, Op op, T unit): op(op), unit(unit) {
     int al = arr.size();
     n = 1;
     while(n < al) {
@@ -31,6 +32,7 @@ struct Segtree {
       dat[k] = op(dat[k * 2 + 1], dat[k * 2 + 2]);
     }
   }
+  // accumlate [a, b)
   T accum(int a, int b, int k = 0, int l = 0, int r = -1) {
     if(r < 0) r = n;
     if(r <= a || b <= l) return unit;
