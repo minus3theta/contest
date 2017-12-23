@@ -1,12 +1,14 @@
 // 1-indexed
-template <class T, class Op, T unit>
+template <class T, class Op = T (*) (T, T)>
 struct Bit {
   int n;
   vector<T> dat;
   Op op;
-  Bit(int n) : n(n), dat(n + 1, unit) {
+  T unit;
+  Bit(int n, Op op = Op(), T unit = T()) : n(n), dat(n + 1, unit), op(op), unit(unit) {
   }
-  Bit(const vector<T> &arr) : n(arr.size()), dat(arr.size() + 1) {
+  Bit(const vector<T> &arr, Op op = Op(), T unit = T())
+    : n(arr.size()), dat(arr.size() + 1), op(op), unit(unit) {
     copy(arr.begin(), arr.end(), dat.begin() + 1);
     for(int i=1; i<n; i++) {
       dat[i + (i & -i)] = op(dat[i + (i & -i)], dat[i]);

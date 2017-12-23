@@ -5,14 +5,14 @@ struct Segtree {
   vector<T> dat;
   Op op;
   T unit;
-  Segtree(int al, Op op, T unit): op(op), unit(unit) {
+  Segtree(int al, Op op = Op(), T unit = T()): op(op), unit(unit) {
     n = 1;
     while(n < al) {
       n *= 2;
     }
     dat = vector<T>(2 * n - 1, unit);
   }
-  Segtree(const vector<T> &arr, Op op, T unit): op(op), unit(unit) {
+  Segtree(const vector<T> &arr, Op op = Op(), T unit = T()): op(op), unit(unit) {
     int al = arr.size();
     n = 1;
     while(n < al) {
