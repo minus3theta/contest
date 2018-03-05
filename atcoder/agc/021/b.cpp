@@ -27,7 +27,6 @@ typedef pair<int,int> PI;
 typedef pair<ll,ll> PL;
 typedef vector<int> VI;
 typedef vector<ll> VL;
-typedef pair<double, double> PD;
 
 template <class T, template <class, class> class C, class charT = char>
 void vdump(const C<T, allocator<T>> &v, const charT* delimiter = ", ",
@@ -38,34 +37,42 @@ void vdump(const C<T, allocator<T>> &v, const charT* delimiter = ", ",
 
 const double pi = acos(-1.0);
 
-struct point {
-  int id;
-  double x, y;
-  bool operator<(const point &p) {
+template <class T = double>
+struct coord {
+  T x, y;
+  coord<T> operator-() const {return {-x, -y};}
+  T norm_sq() const {return x * x + y * y;}
+  coord<T> operator+(const coord &p) const {return {x + p.x, y + p.y};}
+  coord<T> operator-(const coord &p) const {return {x - p.x, y - p.y};}
+  T operator*(const coord &p) const {return x * p.x + y * p.y;}
+  T det(const coord &p) const {return x * p.y - y * p.x;}
+  bool operator<(const coord &p) const {
     if(x != p.x) return x < p.x;
     return y < p.y;
   }
-  PD operator-(const point &p) const {
-    return {x - p.x, y - p.y};
+};
+
+template <class T = double>
+struct point {
+  int id;
+  coord<T> cd;
+  bool operator<(const point &p) const {
+    return cd < p.cd;
   }
 };
 
-ll det(const PD &p, const PD &q) {
-  return p.first * q.second - p.second * q.first;
-}
-
-vector<point> convex_hull(const vector<point> &ps) {
+vector<point<>> convex_hull(const vector<point<>> &ps) {
   int n = ps.size();
   int k = 0;
-  vector<point> qs(n * 2);
+  vector<point<>> qs(n * 2);
   REP(i,0,n) {
-    while(k > 1 && det(qs[k-1] - qs[k-2], ps[i]-qs[k-1]) <= 0) {
+    while(k > 1 && (qs[k-1].cd-qs[k-2].cd).det(ps[i].cd-qs[k-1].cd) <= 0) {
       k--;
     }
     qs[k++] = ps[i];
   }
   for(int i = n-2, t = k; i >= 0; i--) {
-    while (k > t && det(qs[k-1] - qs[k-2], ps[i] - qs[k-1]) <= 0) {
+    while (k > t && (qs[k-1].cd-qs[k-2].cd).det(ps[i].cd-qs[k-1].cd) <= 0) {
       k--;
     }
     qs[k++] = ps[i];
@@ -74,35 +81,31 @@ vector<point> convex_hull(const vector<point> &ps) {
   return qs;
 }
 
-double dot(PD p, PD q) {
-  return p.first * q.first + p.second * q.second;
-}
-
-double arg(PD p, PD q) {
-  double norm = sqrt(dot(p, p) * dot(q, q));
-  return acos(dot(p, q) / norm) / pi / 2.0;
+double arg(coord<double> p, coord<double> q) {
+  double norm = sqrt(p.norm_sq() * q.norm_sq());
+  return acos(p * q / norm) / pi / 2.0;
 }
 
 int main() {
   ios::sync_with_stdio(false);
   int n;
   cin >> n;
-  vector<point> ps(n);
+  vector<point<>> ps(n);
   REP(i,0,n) {
     ps[i].id = i;
   }
   FOR(p,ps) {
-    cin >> p.x >> p.y;
+    cin >> p.cd.x >> p.cd.y;
   }
   sort(ps.begin(), ps.end());
-  vector<point> qs = convex_hull(ps);
+  vector<point<>> qs = convex_hull(ps);
   int k = qs.size();
   vector<double> ans(n, 0.0);
   REP(i,0,k) {
     int prev = (i - 1 + k) % k;
     int next = (i + 1) % k;
-    PD v1 = qs[i] - qs[prev];
-    PD v2 = qs[next] - qs[i];
+    coord<> v1 = qs[i].cd - qs[prev].cd;
+    coord<> v2 = qs[next].cd - qs[i].cd;
     double t = arg(v1, v2);
     ans[qs[i].id] = t;
   }
