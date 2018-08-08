@@ -37,5 +37,6 @@ void vdump(const C<T, allocator<T>> &v, const charT* delimiter = ", ",
 int main() {
   ios::sync_with_stdio(false);
   
+
   return 0;
 }
