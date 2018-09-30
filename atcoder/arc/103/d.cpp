@@ -34,27 +34,8 @@ void vdump(const C<T, allocator<T>> &v, const charT* delimiter = ", ",
   stream << endl;
 }
 
-void solveX(ll src, ll dst, int arm) {
-  ll delta = dst - src;
-  int r = (arm + delta) / 2;
-  REP(i,0,r) {
-    cout << 'R';
-  }
-  REP(i,0,arm-r) {
-    cout << 'L';
-  }
-}
-
-void solveY(ll src, ll dst, int arm) {
-  ll delta = dst - src;
-  int r = (arm + delta) / 2;
-  REP(i,0,r) {
-    cout << 'U';
-  }
-  REP(i,0,arm-r) {
-    cout << 'D';
-  }
-}
+constexpr int M = 33;
+constexpr ll D = (1ll << M) - 1;
 
 int main() {
   ios::sync_with_stdio(false);
@@ -63,8 +44,6 @@ int main() {
   vector<PL> ps(n);
   FOR(p,ps) {
     cin >> p.first >> p.second;
-    assert(-10 <= p.first && p.first <= 10);
-    assert(-10 <= p.second && p.second <= 10);
   }
   ll parity = abs(ps[0].first + ps[0].second) % 2;
   FOR(p,ps) {
@@ -73,40 +52,44 @@ int main() {
       return 0;
     }
   }
-  cout << 40 << endl;
   if(parity) {
-    cout << 2;
-    REP(i,0,39) {
-      cout << " " << 1;
-    }
-    cout << endl;
-    FOR(p,ps) {
-      cout << 'R';
-      if(p.first % 2 == 0) {
-        solveX(2, p.first, 20);
-        solveY(0, p.second, 19);
-      } else {
-        solveX(2, p.first, 19);
-        solveY(0, p.second, 20);
-      }
-      cout << endl;
-    }
+    cout << M << endl;
   } else {
-    cout << 1;
-    REP(i,0,39) {
-      cout << " " << 1;
+    cout << M + 1 << endl;
+    cout << 1 << " ";
+  }
+  REP(i,0,M) {
+    cout << (1ll << i) << " ";
+  }
+  cout << endl;
+  FOR(p,ps) {
+    PL delta;
+    if(parity) {
+      delta = {p.first - D, p.second};
+    } else {
+      delta = {p.first - D - 1, p.second};
+      cout << 'R';
+    }
+    ll du = (-delta.first + delta.second) / 2;
+    ll dv = (-delta.first - delta.second) / 2;
+    REP(i,0,M) {
+      if((du & 1) == 0) {
+        if((dv & 1) == 0) {
+          cout << 'R';
+        } else {
+          cout << 'D';
+        }
+      } else {
+        if((dv & 1) == 0) {
+          cout << 'U';
+        } else {
+          cout << 'L';
+        }
+      }
+      du >>= 1;
+      dv >>= 1;
     }
     cout << endl;
-    FOR(p,ps) {
-      if(p.first % 2 == 0) {
-        solveX(0, p.first, 20);
-        solveY(0, p.second, 20);
-      } else {
-        solveX(0, p.first, 19);
-        solveY(0, p.second, 21);
-      }
-      cout << endl;
-    }
   }
 
   return 0;
