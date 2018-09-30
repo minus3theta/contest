@@ -1,9 +1,9 @@
-.PHONY: all clean
+.PHONY: all clean cpp rust
 
 CXXFLAGS = -O2 -g -Wall
 
 .SUBDIRS: aoj poj
-	include BuildInfo
+	include ./BuildInfo
 	targs = $(rootname $(glob *.cpp))
 	$(targs): %: %.cpp
 		$(CXX) $(CXXFLAGS) -o $@ $<

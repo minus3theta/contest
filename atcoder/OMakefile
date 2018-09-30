@@ -1,6 +1,7 @@
 CXXFLAGS += -std=gnu++1y
 
 .SUBDIRS: $(glob D, *)
+	include ./BuildInfo
 	.SUBDIRS: $(glob D, *)
 		cxxtargs = $(rootname $(glob i, *.cpp))
 		rstargs = $(rootname $(glob i, *.rs))
@@ -10,6 +11,10 @@ CXXFLAGS += -std=gnu++1y
 
 		$(rstargs): %: %.rs
 			rustc $<
+
+		cpp:
+			foreach(id, $(problems)):
+				cp(../../../template/template.cpp $(id).cpp)
 
 		all: $(targs)
 
