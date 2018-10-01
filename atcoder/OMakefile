@@ -16,6 +16,10 @@ CXXFLAGS += -std=gnu++1y
 			foreach(id, $(problems)):
 				cp(../../../template/template.cpp $(id).cpp)
 
+		rust:
+			foreach(id, $(problems)):
+				cp(../../../template/template.rs $(id).rs)
+
 		all: $(targs)
 
 		clean:
