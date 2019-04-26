@@ -67,7 +67,6 @@ fn main() {
       }
     }
   }
-  println!("{:?}", dp);
   let ans: f64 = dp[n].iter().skip(n / 2 + 1).sum();
   println!("{:.15}", ans);
 }
