@@ -62,33 +62,24 @@ fn main() {
   for &a in aa.iter() {
     pop[a] += 1;
   }
-  let total_sushi: usize = aa.iter().sum();
-  dp[pop[1]][pop[2]][pop[3]] = 1.0;
-  for three in (0..n+1).rev() {
-    for two in (0..n+1).rev() {
-      for one in (0..n+1).rev() {
+  dp[pop[3]][pop[2]][pop[1]] = 1.0;
+  let mut ans = 0.0;
+  for three in (0 .. pop[3] + 1).rev() {
+    for two in (0 .. pop[3] - three + pop[2] + 1).rev() {
+      for one in (0 .. pop[3] - three + pop[2] - two + pop[1] + 1).rev() {
         let dish = (one + two + three) as f64;
+        if one + two + three > 0 {
+          ans += dp[three][two][one] * n as f64 / dish;
+        }
         if three > 0 && two + 1 <= n {
-          dp[one][two+1][three-1] += dp[one][two][three] * (three as f64) / dish;
+          dp[three-1][two+1][one] += dp[three][two][one] * (three as f64) / dish;
         }
         if two > 0 && one + 1 <= n {
-          dp[one+1][two-1][three] += dp[one][two][three] * (two as f64) / dish;
+          dp[three][two-1][one+1] += dp[three][two][one] * (two as f64) / dish;
         }
         if one > 0 {
-          dp[one-1][two][three] += dp[one][two][three] * (one as f64) / dish;
+          dp[three][two][one-1] += dp[three][two][one] * (one as f64) / dish;
         }
-      }
-    }
-  }
-  let mut ans = 0.0;
-  for sushi in (1..total_sushi+1).rev() {
-    for three in 0..(sushi / 3 + 1) {
-      for two in 0..((sushi - three * 3) / 2 + 1) {
-        let one = sushi - three * 3 - two * 2;
-        if two > n || one > n {
-          continue;
-        }
-        ans += dp[one][two][three] * n as f64 / (one + two + three) as f64;
       }
     }
   }
