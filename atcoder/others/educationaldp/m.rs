@@ -52,23 +52,26 @@ macro_rules! read_value {
   };
 }
 
+const MODULO: i64 = 1_000_000_007;
+
 fn main() {
   input! {
     n: usize,
     k: usize,
     aa: [usize; n]
   }
-  let modulo = 1_000_000_007;
-  let mut dp = vec![vec![0i64; k+1]; n+1];
+  let mut dp = vec![vec![0i64; k+1]; 2];
   dp[0][0] = 1;
   for (i, &a) in aa.iter().enumerate() {
-    dp[i+1][0] = 1;
+    dp[(i+1)%2][0] = 1;
     for c in 0 .. k {
-      dp[i+1][c+1] = (dp[i+1][c] + dp[i][c+1]) % modulo;
+      let x = dp[(i+1)%2][c] + dp[i%2][c+1];
+      dp[(i+1)%2][c+1] = if x >= MODULO { x - MODULO } else { x };
       if let Some(d) = c.checked_sub(a) {
-        dp[i+1][c+1] = (dp[i+1][c+1] - dp[i][d] + modulo) % modulo;
+        let y = dp[(i+1)%2][c+1] - dp[i%2][d];
+        dp[(i+1)%2][c+1] = if y < 0 { y + MODULO } else { y };
       }
     }
   }
-  println!("{}", dp[n][k]);
+  println!("{}", dp[n%2][k]);
 }
