@@ -54,7 +54,9 @@ macro_rules! read_value {
 
 struct Reroot<ATTR, RET, MON, MAP, ADD, APPLY> {
   vs: Vec<(ATTR, Vec<usize>)>,
-  child: Vec<Vec<(usize, RET)>>,
+  child: Vec<Vec<usize>>,
+  sub: Vec<Option<RET>>,
+  total: Vec<Option<RET>>,
   unit: MON,
   map: MAP,
   add: ADD,
@@ -62,24 +64,80 @@ struct Reroot<ATTR, RET, MON, MAP, ADD, APPLY> {
 }
 
 impl <ATTR, RET, MON, MAP, APPLY, ADD> Reroot<ATTR, RET, MON, MAP, ADD, APPLY> where
-  MON: Clone,
-  MAP: Fn(RET) -> MON,
+  RET: std::fmt::Debug,
+  MON: Clone + std::fmt::Debug,
+  MAP: Fn(&RET) -> MON,
   APPLY: Fn(&ATTR, MON) -> RET,
-  ADD: Fn(MON, &MON) -> MON
+  ADD: Fn(&MON, &MON) -> MON
 {
   fn new(vs: Vec<(ATTR, Vec<usize>)>, unit: MON, map: MAP, add: ADD, apply: APPLY) -> Self {
     let child = vs.iter().map(|_| Vec::new()).collect();
-    Self {
+    let sub = vs.iter().map(|_| None).collect();
+    let total = vs.iter().map(|_| None).collect();
+    Reroot {
       vs: vs,
       child: child,
+      sub: sub,
+      total: total,
       unit: unit,
       map: map,
       add: add,
       apply: apply,
     }
   }
+  fn solve(&mut self) {
+    self.bottom_up(0, None);
+    self.top_down(0, None);
+  }
   fn bottom_up(&mut self, v: usize, prev: Option<usize>) {
-    unimplemented!()
+    let mut m = self.unit.clone();
+    for u in self.vs[v].1.clone() {
+      if let Some(prev) = prev {
+        if u == prev {
+          continue;
+        }
+      }
+      self.child[v].push(u);
+      self.bottom_up(u, Some(v));
+      if let &Some(ref r) = &self.sub[u] {
+        m = (self.add)(&m, &(self.map)(r));
+      } else {
+        unreachable!()
+      }
+    }
+    self.sub[v] = Some((self.apply)(&self.vs[v].0, m));
+  }
+  fn top_down(&mut self, v: usize, par: Option<RET>) {
+    let mut left_scan = vec![self.unit.clone()];
+    for &u in self.child[v].iter() {
+      if let &Some(ref r) = &self.sub[u] {
+        let x = (self.add)(&left_scan.iter().last().unwrap(), &(self.map)(r));
+        left_scan.push(x);
+      } else {
+        unreachable!()
+      }
+    }
+    let mut right_scan = vec![self.unit.clone()];
+    for &u in self.child[v].iter().rev() {
+      if let &Some(ref r) = &self.sub[u] {
+        let x = (self.add)(&right_scan.iter().last().unwrap(), &(self.map)(r));
+        right_scan.push(x);
+      } else {
+        unreachable!()
+      }
+    }
+    let right_scan: Vec<_> = right_scan.into_iter().rev().collect();
+    let par_mon = if let Some(par) = par {
+      (self.map)(&par)
+    } else {
+      self.unit.clone()
+    };
+    let val = (self.apply)(&self.vs[v].0, (self.add)(&left_scan.iter().last().unwrap(), &par_mon));
+    for (i, u) in self.child[v].clone().into_iter().enumerate() {
+      let next_par = Some((self.apply)(&self.vs[v].0, (self.add)(&par_mon, &(self.add)(&left_scan[i], &right_scan[i+1]))));
+      self.top_down(u, next_par);
+    }
+    self.total[v] = Some(val);
   }
 }
 
@@ -94,6 +152,9 @@ fn main() {
     vs[x].1.push(y);
     vs[y].1.push(x);
   }
-  let mut graph = Reroot::new(vs, 1i64, |x: i64| x+1, |_, _| unimplemented!(), |_, _| unimplemented!());
-  println!("");
+  let mut graph = Reroot::new(vs, 1i64, |x| x+1, |x, y| x * y % m, |_, x| x);
+  graph.solve();
+  for x in graph.total.iter() {
+    println!("{}", x.unwrap());
+  }
 }
