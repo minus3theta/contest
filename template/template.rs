@@ -8,8 +8,7 @@ macro_rules! input {
     input_inner!{iter, $($r)*}
   };
   ($($r:tt)*) => {
-    #[allow(unused_mut)]
-    let mut s = {
+    let s = {
       use std::io::Read;
       let mut s = String::new();
       std::io::stdin().read_to_string(&mut s).unwrap();
