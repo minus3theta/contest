@@ -1,5 +1,6 @@
 #[allow(unused_imports)]
 use std::cmp;
+use std::io::Write;
 
 // Input macro from https://qiita.com/tanakh/items/0ba42c7ca36cd29d0ac8
 macro_rules! input {
@@ -52,8 +53,13 @@ macro_rules! read_value {
 }
 
 fn main() {
+  let out = std::io::stdout();
+  let mut out = std::io::BufWriter::new(out.lock());
+  macro_rules! puts {
+    ($($format:tt)*) => (write!(out,$($format)*).unwrap());
+  }
   input! {
   }
 
-  println!("{}", 0);
+  puts!("{}\n", 0);
 }
