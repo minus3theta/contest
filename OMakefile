@@ -2,11 +2,16 @@
 
 CXXFLAGS = -O2 -g -Wall
 
-.SUBDIRS: aoj poj
+.SUBDIRS: aoj poj codechef
 	include ./BuildInfo
-	targs = $(rootname $(glob *.cpp))
-	$(targs): %: %.cpp
+	cxxtargs = $(rootname $(glob i, *.cpp))
+	rstargs = $(rootname $(glob i, *.rs))
+	targs = $(cxxtargs) $(rstargs)
+	$(cxxtargs): %: %.cpp
 		$(CXX) $(CXXFLAGS) -o $@ $<
+
+	$(rstargs): %: %.rs
+		rustc $<
 
 	all: $(targs)
 
