@@ -47,6 +47,11 @@ macro_rules! read_value {
     read_value!($iter, usize) - 1
   };
 
+  ($iter:expr, [ $t:tt ]) => {{
+    let len = read_value!($iter, usize);
+    (0..len).map(|_| read_value!($iter, $t)).collect::<Vec<_>>()
+  }};
+
   ($iter:expr, $t:ty) => {
     $iter.next().unwrap().parse::<$t>().expect("Parse error")
   };
