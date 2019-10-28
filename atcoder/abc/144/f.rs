@@ -87,28 +87,25 @@ fn main() {
     m: usize,
     es: [(usize1, usize1); m],
   }
-  let mut exp = vec![vec![0.0; n]; 2];
+  let mut exp = vec![0.0; n];
   let mut adj = vec![vec![]; n];
   for &(s, t) in &es {
     adj[s].push(t);
   }
-  for i in (0 .. n - 1).rev() {
-    let l = adj[i].len();
-    exp[0][i] = 1.0;
-    exp[1][i] = 1.0;
-    for &j in &adj[i] {
-      exp[0][i] += exp[0][j] / l as f64;
-      exp[1][i] += exp[1][j] / l as f64;
+  let mut ans = 1.0 / 0.0;
+  for b in 0 .. n {
+    for i in (0 .. n - 1).rev() {
+      let l = adj[i].len();
+      exp[i] = 1.0 + if i == b && l > 1 {
+        let mut next: Vec<_> = adj[i].iter().map(|&x| Total(exp[x])).collect();
+        next.sort();
+        next.iter().take(l - 1).map(|x| x.0).sum::<f64>() / (l - 1) as f64
+      } else {
+        adj[i].iter().map(|&x| exp[x]).sum::<f64>() / l as f64
+      };
     }
-    if l > 1 {
-      let mut next: Vec<_> = adj[i].iter().map(|&x| Total(exp[0][x])).collect();
-      next.sort();
-      let e1 = 1.0 + next.iter().take(l - 1).map(|x| x.0).sum::<f64>() / (l - 1) as f64;
-      exp[1][i] = fmin(exp[1][i], e1);
-    }
+    ans = fmin(ans, exp[0]);
   }
-  dbg!(&exp);
 
-  let ans = fmin(exp[0][0], exp[1][0]);
   puts!("{:.15}\n", ans);
 }
