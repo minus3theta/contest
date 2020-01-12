@@ -57,6 +57,213 @@ macro_rules! read_value {
   };
 }
 
+#[allow(dead_code)]
+const EPS: f64 = 1e-8;
+
+#[derive(Copy, Clone, Debug)]
+struct Point {
+  x: f64,
+  y: f64,
+}
+impl Point {
+  #[allow(dead_code)]
+  fn new(x: f64, y: f64) -> Self {
+    Point {
+      x: x,
+      y: y,
+    }
+  }
+  #[allow(dead_code)]
+  fn division(self, other: Self, ratio: f64) -> Self {
+    self + (other - self) * ratio
+  }
+  #[allow(dead_code)]
+  fn dist(self, other: Self) -> f64 {
+    (other - self).abs()
+  }
+  #[allow(dead_code)]
+  fn line_toward(self, vec: Vect) -> Line {
+    Line {
+      a: vec.y,
+      b: -vec.x,
+      c: self.x * vec.y - self.y * vec.x,
+    }
+  }
+  #[allow(dead_code)]
+  fn line_between(self, other: Point) -> Line {
+    let vec = (other - self).normalized();
+    self.line_toward(vec)
+  }
+  #[allow(dead_code)]
+  fn bisector(self, other: Point) -> Line {
+    let midpoint = self.division(other, 0.5);
+    let vec = (other - self).normal_vect();
+    midpoint.line_toward(vec)
+  }
+}
+impl<T: Into<Vect>> std::ops::Add<T> for Point {
+  type Output = Point;
+  fn add(self, other: T) -> Point {
+    let other = other.into();
+    Point {
+      x: self.x + other.x,
+      y: self.y + other.y,
+    }
+  }
+}
+impl std::ops::Sub<Point> for Point {
+  type Output = Vect;
+  fn sub(self, other: Point) -> Vect {
+    Vect {
+      x: self.x - other.x,
+      y: self.y - other.y,
+    }
+  }
+}
+impl<T: Into<Vect>> std::ops::Sub<T> for Point {
+  type Output = Point;
+  fn sub(self, other: T) -> Point {
+    let other = other.into();
+    Point {
+      x: self.x - other.x,
+      y: self.y - other.y,
+    }
+  }
+}
+impl From<(f64, f64)> for Point {
+  fn from(p: (f64, f64)) -> Self {
+    Point::new(p.0, p.1)
+  }
+}
+
+#[derive(Copy, Clone, Debug)]
+struct Vect {
+  x: f64,
+  y: f64,
+}
+impl Vect {
+  #[allow(dead_code)]
+  fn new(x: f64, y: f64) -> Vect {
+    Vect {
+      x: x,
+      y: y,
+    }
+  }
+  #[allow(dead_code)]
+  fn from_angle(theta: f64) -> Vect {
+    Vect {
+      x: theta.cos(),
+      y: theta.sin(),
+    }
+  }
+  #[allow(dead_code)]
+  fn norm(self) -> f64 {
+    self.x.powi(2) + self.y.powi(2)
+  }
+  #[allow(dead_code)]
+  fn abs(self) -> f64 {
+    self.norm().sqrt()
+  }
+  #[allow(dead_code)]
+  fn normal_vect(self) -> Vect {
+    Vect {
+      x: -self.y,
+      y: self.x,
+    }
+  }
+  #[allow(dead_code)]
+  fn normalized(self) -> Vect {
+    self / self.abs()
+  }
+}
+impl<T: Into<Vect>> std::ops::Add<T> for Vect {
+  type Output = Vect;
+  fn add(self, other: T) -> Vect {
+    let other = other.into();
+    Vect {
+      x: self.x + other.x,
+      y: self.y + other.y,
+    }
+  }
+}
+impl<T: Into<Vect>> std::ops::Sub<T> for Vect {
+  type Output = Vect;
+  fn sub(self, other: T) -> Vect {
+    let other = other.into();
+    Vect {
+      x: self.x - other.x,
+      y: self.y - other.y,
+    }
+  }
+}
+impl std::ops::Mul<f64> for Vect {
+  type Output = Vect;
+  fn mul(self, other: f64) -> Vect {
+    Vect {
+      x: self.x * other,
+      y: self.y * other,
+    }
+  }
+}
+impl std::ops::Div<f64> for Vect {
+  type Output = Vect;
+  fn div(self, other: f64) -> Vect {
+    Vect {
+      x: self.x / other,
+      y: self.y / other,
+    }
+  }
+}
+impl<T: Into<Vect>> std::ops::AddAssign<T> for Vect {
+  fn add_assign(&mut self, other: T) {
+    *self = *self + other;
+  }
+}
+impl<T: Into<Vect>> std::ops::SubAssign<T> for Vect {
+  fn sub_assign(&mut self, other: T) {
+    *self = *self - other;
+  }
+}
+impl std::ops::MulAssign<f64> for Vect {
+  fn mul_assign(&mut self, other: f64) {
+    *self = *self * other;
+  }
+}
+impl From<(f64, f64)> for Vect {
+  fn from(p: (f64, f64)) -> Self {
+    Vect::new(p.0, p.1)
+  }
+}
+
+#[derive(Copy, Clone, Debug)]
+struct Line {
+  // ax + by = c
+  a: f64,
+  b: f64,
+  c: f64,
+}
+impl Line {
+  #[allow(dead_code)]
+  fn new(a: f64, b: f64, c: f64) -> Self {
+    Line {
+      a: a,
+      b: b,
+      c: c,
+    }
+  }
+  #[allow(dead_code)]
+  fn intersection(self, other: Line) -> Option<Point> {
+    let det = self.a * other.b - self.b * other.a;
+    if det.abs() < EPS {
+      return None;
+    }
+    Some(Point {
+      x: (other.b * self.c - self.b * other.c) / det,
+      y: (-other.a * self.c + self.a * other.c) / det,
+    })
+  }
+}
+
 fn main() {
   let out = std::io::stdout();
   let mut out = std::io::BufWriter::new(out.lock());
@@ -65,42 +272,41 @@ fn main() {
   }
   input! {
     n: usize,
-    ps: [(i32, i32); n],
+    ps: [(f64, f64); n],
   }
+  let ps: Vec<Point> = ps.into_iter().map(|p| p.into()).collect();
   let mut ans = 1e100;
   for i in 0 .. n {
     for j in i+1 .. n {
-      let dx1 = ps[j].0 - ps[i].0;
-      let dy1 = ps[j].1 - ps[i].1;
-      for k in j .. n {
-        let dx2 = ps[k].0 - ps[i].0;
-        let dy2 = ps[k].1 - ps[i].1;
-        let center = if dx1 * dy2 == dx2 * dy1 {
-          (
-            (cmp::max(ps[i].0, cmp::max(ps[j].0, ps[k].0)) + cmp::min(ps[i].0, cmp::min(ps[j].0, ps[k].0))) as f64 / 2.0,
-            (cmp::max(ps[i].1, cmp::max(ps[j].1, ps[k].1)) + cmp::min(ps[i].1, cmp::min(ps[j].1, ps[k].1))) as f64 / 2.0
-          )
-        } else {
-          let det = (dx2 * dy1 - dx1 * dy2) as f64;
-          let t = (-dx2 * dx1 + dx2 * dx2 - dy1 * dy2 + dy2 * dy2) as f64 / 2.0 / det;
-          let dx1 = dx1 as f64;
-          let dx2 = dx2 as f64;
-          let dy1 = dy1 as f64;
-          let dy2 = dy2 as f64;
-          (
-            (ps[i].0 as f64 + dx1 / 2.0 + t * dy1),
-            (ps[i].1 as f64 + dy1 / 2.0 - t * dx1)
-          )
-        };
-        let mut max = 0.0;
-        for l in 0 .. n {
-          let d = ((ps[l].0 as f64 - center.0).powi(2) + (ps[l].1 as f64 - center.1).powi(2)).sqrt();
-          if d > max {
-            max = d;
-          }
+      let center = ps[i].division(ps[j], 0.5);
+      let mut max = 0.0;
+      for l in 0 .. n {
+        let d = ps[l].dist(center);
+        if d > max {
+          max = d;
         }
-        if max < ans {
-          ans = max;
+      }
+      if max < ans {
+        ans = max;
+      }
+    }
+  }
+  for i in 0 .. n {
+    for j in i+1 .. n {
+      let l1 = ps[i].bisector(ps[j]);
+      for k in j+1 .. n {
+        let l2 = ps[i].bisector(ps[k]);
+        if let Some(center) = l1.intersection(l2) {
+          let mut max = 0.0;
+          for l in 0 .. n {
+            let d = ps[l].dist(center);
+            if d > max {
+              max = d;
+            }
+          }
+          if max < ans {
+            ans = max;
+          }
         }
       }
     }
