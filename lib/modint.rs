@@ -6,8 +6,13 @@ struct ModInt {
 }
 impl ModInt {
   fn new(x: i64) -> Self {
+    let x = x % MOD;
     ModInt {
-      x: x % MOD
+      x: if x < 0 {
+        x + MOD
+      } else {
+        x
+      }
     }
   }
   fn pow(self, e: i64) -> Self {
