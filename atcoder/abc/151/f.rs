@@ -82,23 +82,26 @@ impl Point {
     (other - self).abs()
   }
   #[allow(dead_code)]
-  fn line_toward(self, vec: Vect) -> Line {
+  fn line_with_normal(self, vec: Vect) -> Line {
+    let vec = vec.normalized();
     Line {
-      a: vec.y,
-      b: -vec.x,
-      c: self.x * vec.y - self.y * vec.x,
+      a: vec.x,
+      b: vec.y,
+      c: -self.x * vec.x - self.y * vec.y,
     }
   }
   #[allow(dead_code)]
+  fn line_toward(self, vec: Vect) -> Line {
+    self.line_with_normal(vec.normal_vect())
+  }
+  #[allow(dead_code)]
   fn line_between(self, other: Point) -> Line {
-    let vec = (other - self).normalized();
-    self.line_toward(vec)
+    self.line_toward(other - self)
   }
   #[allow(dead_code)]
   fn bisector(self, other: Point) -> Line {
     let midpoint = self.division(other, 0.5);
-    let vec = (other - self).normal_vect();
-    midpoint.line_toward(vec)
+    midpoint.line_with_normal(other - self)
   }
 }
 impl<T: Into<Vect>> std::ops::Add<T> for Point {
@@ -237,7 +240,7 @@ impl From<(f64, f64)> for Vect {
 
 #[derive(Copy, Clone, Debug)]
 struct Line {
-  // ax + by = c
+  // ax + by + c = 0
   a: f64,
   b: f64,
   c: f64,
@@ -258,8 +261,8 @@ impl Line {
       return None;
     }
     Some(Point {
-      x: (other.b * self.c - self.b * other.c) / det,
-      y: (-other.a * self.c + self.a * other.c) / det,
+      x: (-other.b * self.c + self.b * other.c) / det,
+      y: (other.a * self.c - self.a * other.c) / det,
     })
   }
 }
