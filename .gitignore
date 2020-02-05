@@ -9,3 +9,4 @@
 *.omc
 *.o
 .vscode/
+cargo/*/target/
