@@ -29,6 +29,25 @@ impl ModInt {
   fn inv(self) -> Self {
     self.pow(MOD - 2)
   }
+  #[allow(dead_code)]
+  fn fact(n: usize) -> Vec<Self> {
+    let mut ret = vec![0.into(); n+1];
+    ret[0] = 1.into();
+    for i in 1 .. n + 1 {
+      ret[i] = ret[i-1] * i as i64;
+    }
+    ret
+  }
+  #[allow(dead_code)]
+  fn inv_fact(fact: &Vec<Self>) -> Vec<Self> {
+    let n = fact.len() - 1;
+    let mut ret = vec![0.into(); n+1];
+    ret[n] = fact[n].inv();
+    for i in (0 .. n).rev() {
+      ret[i] = ret[i+1] * (i + 1) as i64;
+    }
+    ret
+  }
 }
 impl<T: Into<ModInt>> std::ops::Add<T> for ModInt {
   type Output = Self;
