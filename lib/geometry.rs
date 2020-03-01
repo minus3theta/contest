@@ -28,7 +28,7 @@ impl Point {
     Line {
       a: vec.x,
       b: vec.y,
-      c: -self.x * vec.x + self.y * vec.y,
+      c: -self.x * vec.x - self.y * vec.y,
     }
   }
   #[allow(dead_code)]
