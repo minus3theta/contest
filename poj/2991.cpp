@@ -1,30 +1,11 @@
 #include <cstdio>
-#include <climits>
-#include <cassert>
 #include <cmath>
-#include <iostream>
-#include <string>
-#include <algorithm>
-#include <numeric>
-#include <functional>
-#include <list>
-#include <map>
-#include <queue>
-#include <stack>
-#include <set>
 #include <vector>
-#include <iterator>
 #include <complex>
-#include <iomanip>
 
 #define REP(i,s,n) for(int i=(int)(s);i<(int)(n);i++)
 
 using namespace std;
-typedef long long ll;
-typedef pair<int,int> PI;
-typedef pair<ll,ll> PL;
-typedef vector<int> VI;
-typedef vector<ll> VL;
 
 // 0-indexed
 template <class T, class Op = T (*) (T, T)>
@@ -80,11 +61,12 @@ struct Add {
 };
 
 int main() {
-  double MPI = acos(-1.0);
+  double pi = acos(-1.0);
   int n, c;
   while (scanf("%d %d", &n, &c) == 2) {
     vector<Elem> arms;
-    arms.push_back(make_pair(MPI / 2.0, complex<double>()));
+    arms.reserve(n+1);
+    arms.push_back(make_pair(pi / 2.0, complex<double>()));
     REP(i,0,n) {
       double l;
       scanf("%lf", &l);
@@ -95,9 +77,9 @@ int main() {
       int s;
       double a;
       scanf("%d %lf", &s, &a);
-      t.update(s, make_pair((a - 180.0) / 180.0 * MPI, arms[s].second));
-      Elem top = t.accum(0, n+1);
-      printf("%.15f %.15f\n", top.second.real(), top.second.imag());
+      t.update(s, make_pair((a - 180.0) / 180.0 * pi, arms[s].second));
+      complex<double> &end = t.dat[0].second;
+      printf("%.15f %.15f\n", end.real(), end.imag());
     }
     printf("\n");
   }
