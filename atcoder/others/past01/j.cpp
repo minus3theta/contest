@@ -49,7 +49,7 @@ void dijk(int h, int w, const vector<VL> &a, vector<VL> &dist, int si, int sj) {
     REP(k,0,4) {
       int ni = i + di[k];
       int nj = j + dj[k];
-      if (ni < 0 || ni >= h || nj < 0 || nj > w) {
+      if (ni < 0 || ni >= h || nj < 0 || nj >= w) {
         continue;
       }
       if (d + a[ni][nj] < dist[ni][nj]) {
