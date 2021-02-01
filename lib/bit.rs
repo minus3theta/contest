@@ -26,7 +26,9 @@ impl<T: Clone, F: Fn(&mut T, &T)> Bit<T, F> {
             let j = i as i32;
             let b = (j & -j) as usize;
             let x = dat[i].clone();
-            op(&mut dat[i + b], &x);
+            if i + b <= n {
+                op(&mut dat[i + b], &x);
+            }
         }
         Bit {
             n: n,
