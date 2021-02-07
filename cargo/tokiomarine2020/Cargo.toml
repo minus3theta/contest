@@ -4,6 +4,15 @@ version = "0.1.0"
 authors = ["minus3theta <yone_j_synthesis@yahoo.co.jp>"]
 edition = "2018"
 
+[package.metadata.cargo-compete]
+config = "../compete.toml"
+
+[package.metadata.cargo-compete.bin]
+a = {name = "tokiomarine2020-a",problem = "https://atcoder.jp/contests/tokiomarine2020/<FIXME: screen name of the problem>"}
+b = {name = "tokiomarine2020-b",problem = "https://atcoder.jp/contests/tokiomarine2020/<FIXME: screen name of the problem>"}
+c = {name = "tokiomarine2020-c",problem = "https://atcoder.jp/contests/tokiomarine2020/<FIXME: screen name of the problem>"}
+d = {name = "tokiomarine2020-d",problem = "https://atcoder.jp/contests/tokiomarine2020/<FIXME: screen name of the problem>"}
+
 # dependencies added to new project
 [dependencies]
 num = "=0.2.1"
@@ -49,3 +58,19 @@ smallvec = "=1.1.0"
 [profile.release]
 lto = true
 panic = 'abort'
+
+[[bin]]
+name = "tokiomarine2020-a"
+path = "./src/bin/a.rs"
+
+[[bin]]
+name = "tokiomarine2020-b"
+path = "./src/bin/b.rs"
+
+[[bin]]
+name = "tokiomarine2020-c"
+path = "./src/bin/c.rs"
+
+[[bin]]
+name = "tokiomarine2020-d"
+path = "./src/bin/d.rs"

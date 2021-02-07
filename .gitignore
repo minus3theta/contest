@@ -10,3 +10,4 @@
 *.o
 .vscode/
 cargo/*/target/
+cargo/target/
