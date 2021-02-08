@@ -1,0 +1,23 @@
+---
+type: Batch
+
+timelimit: 1s 500ms
+
+match: Lines
+
+
+cases:
+  - name: sample1
+    
+    in: "6\n2 4 4 9 4 9\n"
+    
+    out: "20\n"
+    
+  - name: sample2
+    
+    in: "6\n200 4 4 9 4 9\n"
+    
+    out: "200\n"
+    
+
+extend: []

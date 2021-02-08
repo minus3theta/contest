@@ -1,0 +1,38 @@
+---
+type: Batch
+
+timelimit: 2s
+
+match:
+  Float:
+    relative_error: 0.001
+    absolute_error: 0.001
+
+
+cases:
+  - name: sample1
+    
+    in: "2 2 0\n\n"
+    
+    out: "1.5000\n"
+    
+  - name: sample2
+    
+    in: "2 2 1\n1\n"
+    
+    out: "2.0000\n"
+    
+  - name: sample3
+    
+    in: "100 6 10\n11 12 13 14 15 16 17 18 19 20\n"
+    
+    out: "-1\n"
+    
+  - name: sample4
+    
+    in: "100000 2 2\n2997 92458\n"
+    
+    out: "201932.2222\n"
+    
+
+extend: []
