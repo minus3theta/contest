@@ -1,0 +1,29 @@
+---
+type: Batch
+
+timelimit: 2s
+
+match: Lines
+
+
+cases:
+  - name: sample1
+    
+    in: "2 1 0\n"
+    
+    out: "Takahashi\n"
+    
+  - name: sample2
+    
+    in: "2 2 0\n"
+    
+    out: "Aoki\n"
+    
+  - name: sample3
+    
+    in: "2 2 1\n"
+    
+    out: "Takahashi\n"
+    
+
+extend: []
