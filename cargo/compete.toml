@@ -16,7 +16,7 @@ test-suite = "{{ manifest_dir }}/testcases/{{ bin_alias }}.yml"
 # Open files with the command (`jq` command that outputs `string[] | string[][]`)
 #
 # VSCode:
-open = '[["code", .manifest_dir], ["code"] + (.paths | map([.src, .test_suite]) | flatten)]'
+open = '[["code", .manifest_dir], ["code"] + (.paths | map(.src))]'
 # Emacs:
 #open = '["emacsclient", "-n"] + (.paths | map([.src, .test_suite]) | flatten)'
 
