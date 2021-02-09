@@ -1,0 +1,23 @@
+---
+type: Batch
+
+timelimit: 2s
+
+match: Lines
+
+
+cases:
+  - name: sample1
+    
+    in: "10 3 5 20\n"
+    
+    out: "Yes\n"
+    
+  - name: sample2
+    
+    in: "10 3 5 30\n"
+    
+    out: "No\n"
+    
+
+extend: []

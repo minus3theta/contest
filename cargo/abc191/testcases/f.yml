@@ -1,0 +1,29 @@
+---
+type: Batch
+
+timelimit: 2s
+
+match: Lines
+
+
+cases:
+  - name: sample1
+    
+    in: "3\n6 9 12\n"
+    
+    out: "2\n"
+    
+  - name: sample2
+    
+    in: "4\n8 2 12 6\n"
+    
+    out: "1\n"
+    
+  - name: sample3
+    
+    in: "7\n30 28 33 49 27 37 48\n"
+    
+    out: "7\n"
+    
+
+extend: []
