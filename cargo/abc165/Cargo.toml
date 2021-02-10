@@ -4,18 +4,37 @@ version = "0.1.0"
 authors = ["minus3theta <yone_j_synthesis@yahoo.co.jp>"]
 edition = "2018"
 
-[package.metadata.cargo-compete]
-config = "../compete.toml"
-
 [package.metadata.cargo-compete.bin]
-a = {name = "abc165-a",problem = "https://atcoder.jp/contests/abc165/<FIXME: screen name of the problem>"}
-b = {name = "abc165-b",problem = "https://atcoder.jp/contests/abc165/<FIXME: screen name of the problem>"}
-c = {name = "abc165-c",problem = "https://atcoder.jp/contests/abc165/<FIXME: screen name of the problem>"}
-d = {name = "abc165-d",problem = "https://atcoder.jp/contests/abc165/<FIXME: screen name of the problem>"}
-e = {name = "abc165-e",problem = "https://atcoder.jp/contests/abc165/<FIXME: screen name of the problem>"}
-f = {name = "abc165-f",problem = "https://atcoder.jp/contests/abc165/<FIXME: screen name of the problem>"}
+abc165-a = { alias = "a", problem = "https://atcoder.jp/contests/abc165/tasks/abc165_a" }
+abc165-b = { alias = "b", problem = "https://atcoder.jp/contests/abc165/tasks/abc165_b" }
+abc165-c = { alias = "c", problem = "https://atcoder.jp/contests/abc165/tasks/abc165_c" }
+abc165-d = { alias = "d", problem = "https://atcoder.jp/contests/abc165/tasks/abc165_d" }
+abc165-e = { alias = "e", problem = "https://atcoder.jp/contests/abc165/tasks/abc165_e" }
+abc165-f = { alias = "f", problem = "https://atcoder.jp/contests/abc165/tasks/abc165_f" }
 
-# dependencies added to new project
+[[bin]]
+name = "abc165-a"
+path = "src/bin/a.rs"
+
+[[bin]]
+name = "abc165-b"
+path = "src/bin/b.rs"
+
+[[bin]]
+name = "abc165-c"
+path = "src/bin/c.rs"
+
+[[bin]]
+name = "abc165-d"
+path = "src/bin/d.rs"
+
+[[bin]]
+name = "abc165-e"
+path = "src/bin/e.rs"
+
+[[bin]]
+name = "abc165-f"
+path = "src/bin/f.rs"
 [dependencies]
 num = "=0.2.1"
 num-bigint = "=0.2.5"
@@ -56,31 +75,3 @@ text_io = "=0.1.7"
 whiteread = "=0.5.0"
 rustc-hash = "=1.0.1"
 smallvec = "=1.1.0"
-
-[profile.release]
-lto = true
-panic = 'abort'
-
-[[bin]]
-name = "abc165-a"
-path = "./src/bin/a.rs"
-
-[[bin]]
-name = "abc165-b"
-path = "./src/bin/b.rs"
-
-[[bin]]
-name = "abc165-c"
-path = "./src/bin/c.rs"
-
-[[bin]]
-name = "abc165-d"
-path = "./src/bin/d.rs"
-
-[[bin]]
-name = "abc165-e"
-path = "./src/bin/e.rs"
-
-[[bin]]
-name = "abc165-f"
-path = "./src/bin/f.rs"

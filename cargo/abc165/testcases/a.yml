@@ -1,0 +1,29 @@
+---
+type: Batch
+
+timelimit: 2s
+
+match: Lines
+
+
+cases:
+  - name: sample1
+    
+    in: "7\n500 600\n"
+    
+    out: "OK\n"
+    
+  - name: sample2
+    
+    in: "4\n5 7\n"
+    
+    out: "NG\n"
+    
+  - name: sample3
+    
+    in: "1\n11 11\n"
+    
+    out: "OK\n"
+    
+
+extend: []
