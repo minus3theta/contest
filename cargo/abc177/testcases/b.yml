@@ -1,0 +1,23 @@
+---
+type: Batch
+
+timelimit: 2s
+
+match: Lines
+
+
+cases:
+  - name: sample1
+    
+    in: "cabacc\nabc\n"
+    
+    out: "1\n"
+    
+  - name: sample2
+    
+    in: "codeforces\natcoder\n"
+    
+    out: "6\n"
+    
+
+extend: []
