@@ -1,0 +1,35 @@
+---
+type: Batch
+
+timelimit: 2s
+
+match: Lines
+
+
+cases:
+  - name: sample1
+    
+    in: "11 2\n"
+    
+    out: "3\n"
+    
+  - name: sample2
+    
+    in: "0 4\n"
+    
+    out: "4\n"
+    
+  - name: sample3
+    
+    in: "112 20210213\n"
+    
+    out: "20210436\n"
+    
+  - name: sample4
+    
+    in: "-211 1000000000000000000\n"
+    
+    out: "1000000000000000422\n"
+    
+
+extend: []

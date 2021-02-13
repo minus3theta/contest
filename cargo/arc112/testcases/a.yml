@@ -1,0 +1,17 @@
+---
+type: Batch
+
+timelimit: 2s
+
+match: Lines
+
+
+cases:
+  - name: sample1
+    
+    in: "5\n2 6\n0 0\n1000000 1000000\n12345 67890\n0 1000000\n"
+    
+    out: "6\n1\n0\n933184801\n500001500001\n"
+    
+
+extend: []
