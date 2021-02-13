@@ -1,0 +1,29 @@
+---
+type: Batch
+
+timelimit: 2s
+
+match: Lines
+
+
+cases:
+  - name: sample1
+    
+    in: "cupofcoffee\ncupofhottea\n"
+    
+    out: "4\n"
+    
+  - name: sample2
+    
+    in: "abcde\nbcdea\n"
+    
+    out: "5\n"
+    
+  - name: sample3
+    
+    in: "apple\napple\n"
+    
+    out: "0\n"
+    
+
+extend: []
