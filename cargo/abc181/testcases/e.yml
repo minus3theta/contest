@@ -1,0 +1,29 @@
+---
+type: Batch
+
+timelimit: 2s
+
+match: Lines
+
+
+cases:
+  - name: sample1
+    
+    in: "5 3\n1 2 3 4 7\n1 3 8\n"
+    
+    out: "3\n"
+    
+  - name: sample2
+    
+    in: "7 7\n31 60 84 23 16 13 32\n96 80 73 76 87 57 29\n"
+    
+    out: "34\n"
+    
+  - name: sample3
+    
+    in: "15 10\n554 525 541 814 661 279 668 360 382 175 833 783 688 793 736\n496 732 455 306 189 207 976 73 567 759\n"
+    
+    out: "239\n"
+    
+
+extend: []

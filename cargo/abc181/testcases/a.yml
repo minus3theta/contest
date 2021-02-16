@@ -1,0 +1,23 @@
+---
+type: Batch
+
+timelimit: 2s
+
+match: Lines
+
+
+cases:
+  - name: sample1
+    
+    in: "2\n"
+    
+    out: "White\n"
+    
+  - name: sample2
+    
+    in: "5\n"
+    
+    out: "Black\n"
+    
+
+extend: []

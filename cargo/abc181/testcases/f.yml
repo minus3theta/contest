@@ -1,0 +1,38 @@
+---
+type: Batch
+
+timelimit: 2s
+
+match:
+  Float:
+    relative_error: 0.0001
+    absolute_error: 0.0001
+
+
+cases:
+  - name: sample1
+    
+    in: "2\n0 -40\n0 40\n"
+    
+    out: "40\n"
+    
+  - name: sample2
+    
+    in: "4\n0 -10\n99 10\n0 91\n99 -91\n"
+    
+    out: "50.5\n"
+    
+  - name: sample3
+    
+    in: "10\n-90 40\n20 -30\n0 -90\n10 -70\n80 70\n-90 30\n-20 -80\n10 90\n50 30\n60 -70\n"
+    
+    out: "33.541019662496845446\n"
+    
+  - name: sample4
+    
+    in: "10\n65 -90\n-34 -2\n62 99\n42 -13\n47 -84\n84 87\n16 -78\n56 35\n90 8\n90 19\n"
+    
+    out: "35.003571246374276203\n"
+    
+
+extend: []
