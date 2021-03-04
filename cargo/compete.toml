@@ -117,6 +117,8 @@ use std::collections::*;
 fn main() {
     input! {
     }
+
+    println!("{}", 0);
 }
 '''
 
