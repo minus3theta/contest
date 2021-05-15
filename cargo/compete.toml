@@ -41,19 +41,34 @@ path = "./{{ contest }}"
 #url = "https://atcoder.jp/contests/{{ id }}"
 #path = "./{{ contest }}"
 
-[new.template]
-#lockfile = "/path/to/cargo-lock-template.toml"
-# `profile` for `Cargo.toml`.
-#
-# By setting this, you can run tests with `opt-level=3` while enabling `debug-assertions` and `overflow-checks`.
-#profile = '''
-#[dev]
-#opt-level = 3
-#'''
+[template]
+src = '''
+#[allow(unused_imports)]
+use itertools::Itertools;
+#[allow(unused_imports)]
+use num::Integer;
+#[allow(unused_imports)]
+use proconio::derive_readable;
+use proconio::fastout;
+use proconio::input;
+#[allow(unused_imports)]
+use proconio::marker::*;
+#[allow(unused_imports)]
+use std::cmp;
+#[allow(unused_imports)]
+use std::collections::*;
 
-[new.template.dependencies]
-kind = "inline"
-content = '''
+#[fastout]
+fn main() {
+    input! {
+    }
+
+    println!("{}", 0);
+}
+'''
+
+[template.new]
+dependencies = '''
 num = "=0.2.1"
 num-bigint = "=0.2.5"
 num-complex = "=0.2.4"
@@ -93,33 +108,6 @@ text_io = "=0.1.7"
 whiteread = "=0.5.0"
 rustc-hash = "=1.0.1"
 smallvec = "=1.1.0"
-'''
-
-[new.template.src]
-kind = "inline"
-content = '''
-#[allow(unused_imports)]
-use itertools::Itertools;
-#[allow(unused_imports)]
-use num::Integer;
-#[allow(unused_imports)]
-use proconio::derive_readable;
-use proconio::fastout;
-use proconio::input;
-#[allow(unused_imports)]
-use proconio::marker::*;
-#[allow(unused_imports)]
-use std::cmp;
-#[allow(unused_imports)]
-use std::collections::*;
-
-#[fastout]
-fn main() {
-    input! {
-    }
-
-    println!("{}", 0);
-}
 '''
 
 # for Library-Checker
