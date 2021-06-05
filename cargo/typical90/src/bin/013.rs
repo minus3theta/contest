@@ -13,26 +13,8 @@ use std::cmp;
 #[allow(unused_imports)]
 use std::collections::*;
 
-fn dijkstra(adj: &[Vec<(usize, i64)>], start: usize) -> Vec<i64> {
-    let mut dist = vec![1 << 60; adj.len()];
-    dist[start] = 0;
-    let mut que = BinaryHeap::new();
-    use cmp::Reverse;
-    que.push((Reverse(0), start));
-    while let Some((d, v)) = que.pop() {
-        let d = d.0;
-        if d > dist[v] {
-            continue;
-        }
-        for &(u, c) in &adj[v] {
-            if d + c < dist[u] {
-                dist[u] = d + c;
-                que.push((Reverse(d + c), u));
-            }
-        }
-    }
-    dist
-}
+use petgraph::algo::dijkstra;
+use petgraph::graph::UnGraph;
 
 #[fastout]
 fn main() {
@@ -41,15 +23,11 @@ fn main() {
         m: usize,
         es: [(Usize1, Usize1, i64); m],
     }
-    let mut adj = vec![vec![]; n];
-    for &(a, b, c) in &es {
-        adj[a].push((b, c));
-        adj[b].push((a, c));
-    }
-    let dist0 = dijkstra(&adj, 0);
-    let dist1 = dijkstra(&adj, n - 1);
+    let g = UnGraph::<(), i64, usize>::from_edges(&es);
+    let dist0 = dijkstra(&g, 0.into(), None, |e| *e.weight());
+    let dist1 = dijkstra(&g, (n - 1).into(), None, |e| *e.weight());
 
     for i in 0..n {
-        println!("{}", dist0[i] + dist1[i]);
+        println!("{}", dist0[&i.into()] + dist1[&i.into()]);
     }
 }
