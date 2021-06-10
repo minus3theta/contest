@@ -86,6 +86,13 @@ impl From<i64> for ModInt {
         ModInt::new(x)
     }
 }
+impl std::str::FromStr for ModInt {
+    type Err = <i64 as std::str::FromStr>::Err;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(ModInt::new(s.parse()?))
+    }
+}
 impl std::fmt::Display for ModInt {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         self.x.fmt(f)
@@ -109,5 +116,15 @@ impl<T: Into<ModInt>> std::ops::MulAssign<T> for ModInt {
 impl<T: Into<ModInt>> std::ops::DivAssign<T> for ModInt {
     fn div_assign(&mut self, other: T) {
         *self = *self / other;
+    }
+}
+impl std::iter::Sum for ModInt {
+    fn sum<I: Iterator<Item = Self>>(iter: I) -> Self {
+        iter.fold(0.into(), |acc, x| acc + x)
+    }
+}
+impl std::iter::Product for ModInt {
+    fn product<I: Iterator<Item = Self>>(iter: I) -> Self {
+        iter.fold(1.into(), |acc, x| acc * x)
     }
 }
