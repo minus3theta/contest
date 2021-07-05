@@ -39,7 +39,7 @@ fn solve(ps: &[(i64, i64)], pat: i32, k: u32) -> i64 {
     assert_ne!(free, 0);
     let mut used = free;
     let mut ret = solve(ps, free, k - 1);
-    while { used != 0 } {
+    while used != 0 {
         let rest = free & !used;
         if rest.count_ones() < k - 1 {
             used = (used - 1) & free;
