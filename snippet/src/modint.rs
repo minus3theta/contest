@@ -1,18 +1,27 @@
 use cargo_snippet::snippet;
 
-#[snippet(prefix = "use modint::*;")]
+#[snippet]
 pub mod modint {
-    const MOD: i64 = 1_000_000_007;
+    use std::ops::*;
 
-    #[derive(Copy, Clone, Hash, Debug)]
-    pub struct ModInt {
-        x: i64,
+    pub trait Mod: Copy {
+        const MOD: i64;
     }
-    impl ModInt {
+
+    #[derive(Copy, Clone, Hash, Debug, PartialEq, Eq)]
+    pub struct ModInt<M> {
+        x: i64,
+        marker: std::marker::PhantomData<M>,
+    }
+    impl<M: Mod> ModInt<M> {
         pub fn new(x: i64) -> Self {
-            let x = x % MOD;
+            let x = x % M::MOD;
+            Self::new_internal(if x < 0 { x + M::MOD } else { x })
+        }
+        fn new_internal(x: i64) -> Self {
             ModInt {
-                x: if x < 0 { x + MOD } else { x },
+                x,
+                marker: std::marker::PhantomData,
             }
         }
         pub fn pow(self, e: i64) -> Self {
@@ -26,7 +35,7 @@ pub mod modint {
             }
         }
         pub fn inv(self) -> Self {
-            self.pow(MOD - 2)
+            self.pow(M::MOD - 2)
         }
         pub fn fact(n: usize) -> Vec<Self> {
             let mut ret = vec![0.into(); n + 1];
@@ -45,88 +54,114 @@ pub mod modint {
             }
             ret
         }
+        pub fn facts(n: usize) -> (Vec<Self>, Vec<Self>) {
+            let fact = Self::fact(n);
+            let inv_fact = Self::inv_fact(&fact);
+            (fact, inv_fact)
+        }
+        pub fn comb<'a>(
+            fact: &'a Vec<Self>,
+            inv_fact: &'a Vec<Self>,
+        ) -> impl Fn(usize, usize) -> Self + 'a {
+            move |x, y| {
+                if y <= x {
+                    fact[x] * inv_fact[y] * inv_fact[x - y]
+                } else {
+                    0.into()
+                }
+            }
+        }
     }
-    impl<T: Into<ModInt>> std::ops::Add<T> for ModInt {
+    impl<M: Mod, T: Into<ModInt<M>>> Add<T> for ModInt<M> {
         type Output = Self;
         fn add(self, other: T) -> Self {
             let other = other.into();
             let sum = self.x + other.x;
-            ModInt {
-                x: if sum >= MOD { sum - MOD } else { sum },
-            }
+            Self::new_internal(if sum >= M::MOD { sum - M::MOD } else { sum })
         }
     }
-    impl<T: Into<ModInt>> std::ops::Sub<T> for ModInt {
+    impl<M: Mod, T: Into<ModInt<M>>> Sub<T> for ModInt<M> {
         type Output = Self;
         fn sub(self, other: T) -> Self {
             let other = other.into();
             let sum = self.x - other.x;
-            ModInt {
-                x: if sum < 0 { sum + MOD } else { sum },
-            }
+            Self::new_internal(if sum < 0 { sum + M::MOD } else { sum })
         }
     }
-    impl<T: Into<ModInt>> std::ops::Mul<T> for ModInt {
+    impl<M: Mod, T: Into<ModInt<M>>> Mul<T> for ModInt<M> {
         type Output = Self;
         fn mul(self, other: T) -> Self {
             let other = other.into();
-            ModInt {
-                x: self.x * other.x % MOD,
-            }
+            Self::new_internal(self.x * other.x % M::MOD)
         }
     }
-    impl<T: Into<ModInt>> std::ops::Div<T> for ModInt {
+    impl<M: Mod, T: Into<ModInt<M>>> Div<T> for ModInt<M> {
         type Output = Self;
         fn div(self, other: T) -> Self {
             let other = other.into();
             self * other.inv()
         }
     }
-    impl From<i64> for ModInt {
+    impl<M: Mod> From<i64> for ModInt<M> {
         fn from(x: i64) -> Self {
-            ModInt::new(x)
+            Self::new(x)
         }
     }
-    impl std::str::FromStr for ModInt {
+    impl<M: Mod> std::str::FromStr for ModInt<M> {
         type Err = <i64 as std::str::FromStr>::Err;
-
         fn from_str(s: &str) -> Result<Self, Self::Err> {
             Ok(ModInt::new(s.parse()?))
         }
     }
-    impl std::fmt::Display for ModInt {
+    impl<M> std::fmt::Display for ModInt<M> {
         fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
             self.x.fmt(f)
         }
     }
-    impl<T: Into<ModInt>> std::ops::AddAssign<T> for ModInt {
+    impl<M: Mod, T: Into<ModInt<M>>> AddAssign<T> for ModInt<M> {
         fn add_assign(&mut self, other: T) {
             *self = *self + other;
         }
     }
-    impl<T: Into<ModInt>> std::ops::SubAssign<T> for ModInt {
+    impl<M: Mod, T: Into<ModInt<M>>> SubAssign<T> for ModInt<M> {
         fn sub_assign(&mut self, other: T) {
             *self = *self - other;
         }
     }
-    impl<T: Into<ModInt>> std::ops::MulAssign<T> for ModInt {
+    impl<M: Mod, T: Into<ModInt<M>>> MulAssign<T> for ModInt<M> {
         fn mul_assign(&mut self, other: T) {
             *self = *self * other;
         }
     }
-    impl<T: Into<ModInt>> std::ops::DivAssign<T> for ModInt {
+    impl<M: Mod, T: Into<ModInt<M>>> DivAssign<T> for ModInt<M> {
         fn div_assign(&mut self, other: T) {
             *self = *self / other;
         }
     }
-    impl std::iter::Sum for ModInt {
+    impl<M: Mod> std::iter::Sum for ModInt<M> {
         fn sum<I: Iterator<Item = Self>>(iter: I) -> Self {
             iter.fold(0.into(), |acc, x| acc + x)
         }
     }
-    impl std::iter::Product for ModInt {
+    impl<M: Mod> std::iter::Product for ModInt<M> {
         fn product<I: Iterator<Item = Self>>(iter: I) -> Self {
             iter.fold(1.into(), |acc, x| acc * x)
         }
     }
+
+    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+    pub enum Mod1e9 {}
+    impl Mod for Mod1e9 {
+        const MOD: i64 = 1_000_000_009;
+    }
+
+    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+    pub enum Mod998 {}
+    impl Mod for Mod998 {
+        const MOD: i64 = 998_244_353;
+    }
 }
+
+#[snippet(name = "mint")]
+#[snippet(include = "modint")]
+pub type MInt = modint::ModInt<modint::Mod1e9>;
