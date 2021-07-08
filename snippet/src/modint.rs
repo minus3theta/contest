@@ -152,7 +152,7 @@ pub mod modint {
     #[derive(Debug, Clone, Copy, PartialEq, Eq)]
     pub enum Mod1e9 {}
     impl Mod for Mod1e9 {
-        const MOD: i64 = 1_000_000_009;
+        const MOD: i64 = 1_000_000_007;
     }
 
     #[derive(Debug, Clone, Copy, PartialEq, Eq)]
