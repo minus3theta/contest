@@ -109,6 +109,7 @@ whiteread = "=0.5.0"
 rustc-hash = "=1.0.1"
 smallvec = "=1.1.0"
 '''
+edition = "2018"
 
 # for Library-Checker
 #[add]
