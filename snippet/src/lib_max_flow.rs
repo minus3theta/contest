@@ -17,6 +17,7 @@ pub mod max_flow {
         pub edges: Vec<Vec<Edge<E>>>,
     }
 
+    #[allow(clippy::len_without_is_empty)]
     impl<E> FlowGraph<E> {
         pub fn new(n: usize) -> Self {
             Self {
@@ -190,19 +191,19 @@ pub mod dinic {
             graph: &FlowGraph<E>,
             v: usize,
             t: usize,
-            f: i64,
+            flow: i64,
             level: &[Option<i32>],
             current_edge: &mut [usize],
         ) -> i64 {
             if v == t {
-                return f;
+                return flow;
             }
             while current_edge[v] < graph.edges[v].len() {
                 let e = &graph.edges[v][current_edge[v]];
                 if let Some(l) = level[v] {
                     let cap = e.cap.get();
                     if cap > 0 && level[e.to] == Some(l + 1) {
-                        let d = Self::dfs(graph, e.to, t, f.min(cap), level, current_edge);
+                        let d = Self::dfs(graph, e.to, t, flow.min(cap), level, current_edge);
                         if d > 0 {
                             e.cap.set(cap - d);
                             let r_cap = graph.edges[e.to][e.rev].cap.get();

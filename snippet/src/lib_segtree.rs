@@ -49,15 +49,15 @@ pub mod segtree {
         pub fn accum(&self, a: usize, b: usize) -> T {
             self.accum_inner(a, b, 0, 0, self.n)
         }
-        fn accum_inner(&self, a: usize, b: usize, k: usize, l: usize, r: usize) -> T {
-            if r <= a || b <= l {
+        fn accum_inner(&self, a: usize, b: usize, k: usize, left: usize, right: usize) -> T {
+            if right <= a || b <= left {
                 return self.unit.clone();
             }
-            if a <= l && r <= b {
+            if a <= left && right <= b {
                 return self.dat[k].clone();
             }
-            let vl = self.accum_inner(a, b, k * 2 + 1, l, (l + r) / 2);
-            let vr = self.accum_inner(a, b, k * 2 + 2, (l + r) / 2, r);
+            let vl = self.accum_inner(a, b, k * 2 + 1, left, (left + right) / 2);
+            let vr = self.accum_inner(a, b, k * 2 + 2, (left + right) / 2, right);
             (self.op)(&vl, &vr)
         }
     }
@@ -140,34 +140,34 @@ pub mod lazy_segtree {
         pub fn update(&mut self, a: usize, b: usize, x: &L) {
             self.update_inner(a, b, x, 0, 0, self.n);
         }
-        fn update_inner(&mut self, a: usize, b: usize, x: &L, k: usize, l: usize, r: usize) {
-            self.eval(k, l, r);
-            if b <= l || r <= a {
+        fn update_inner(&mut self, a: usize, b: usize, x: &L, k: usize, left: usize, right: usize) {
+            self.eval(k, left, right);
+            if b <= left || right <= a {
                 return;
             }
-            if a <= l && r <= b {
+            if a <= left && right <= b {
                 self.lazy[k] = (self.composition)(&self.lazy[k], x);
-                self.eval(k, l, r);
+                self.eval(k, left, right);
             } else {
-                let mid = (l + r) / 2;
-                self.update_inner(a, b, x, 2 * k + 1, l, mid);
-                self.update_inner(a, b, x, 2 * k + 2, mid, r);
+                let mid = (left + right) / 2;
+                self.update_inner(a, b, x, 2 * k + 1, left, mid);
+                self.update_inner(a, b, x, 2 * k + 2, mid, right);
                 self.dat[k] = (self.op)(&self.dat[2 * k + 1], &self.dat[2 * k + 2]);
             }
         }
         pub fn accum(&mut self, a: usize, b: usize) -> T {
             self.accum_inner(a, b, 0, 0, self.n)
         }
-        fn accum_inner(&mut self, a: usize, b: usize, k: usize, l: usize, r: usize) -> T {
-            if r <= a || b <= l {
+        fn accum_inner(&mut self, a: usize, b: usize, k: usize, left: usize, right: usize) -> T {
+            if right <= a || b <= left {
                 return self.unit.clone();
             }
-            self.eval(k, l, r);
-            if a <= l && r <= b {
+            self.eval(k, left, right);
+            if a <= left && right <= b {
                 return self.dat[k].clone();
             }
-            let vl = self.accum_inner(a, b, k * 2 + 1, l, (l + r) / 2);
-            let vr = self.accum_inner(a, b, k * 2 + 2, (l + r) / 2, r);
+            let vl = self.accum_inner(a, b, k * 2 + 1, left, (left + right) / 2);
+            let vr = self.accum_inner(a, b, k * 2 + 2, (left + right) / 2, right);
             (self.op)(&vl, &vr)
         }
     }

@@ -1,6 +1,6 @@
 use cargo_snippet::snippet;
 
-pub use crate::modint::modint;
+pub use crate::lib_modint::modint;
 
 #[snippet]
 #[snippet(include = "modint")]
@@ -57,12 +57,12 @@ pub mod fft {
     }
 
     pub fn fft<R: DftRing>(f: &mut [R], inverse: bool) {
-        let n = f.len();
-        assert!(n.is_power_of_two());
+        let f_len = f.len();
+        assert!(f_len.is_power_of_two());
         {
             let mut i = 0;
-            for j in 1..n - 1 {
-                let mut k = n >> 1;
+            for j in 1..f_len - 1 {
+                let mut k = f_len >> 1;
                 loop {
                     i ^= k;
                     if k <= i {
@@ -79,27 +79,27 @@ pub mod fft {
         {
             let mut m = 1;
             let mut cur = if inverse {
-                R::root(n).inv()
+                R::root(f_len).inv()
             } else {
-                R::root(n)
+                R::root(f_len)
             };
-            while m < n {
+            while m < f_len {
                 roots.push(cur);
                 cur = cur * cur;
                 m *= 2;
             }
         }
         let mut m = 1;
-        while m < n {
+        while m < f_len {
             let base = roots.pop().unwrap();
             let mut r = 0;
-            while r < n {
+            while r < f_len {
                 let mut w = R::one();
                 for s in r..r + m {
-                    let u = f[s];
-                    let d = f[s + m] * w;
-                    f[s] = u + d;
-                    f[s + m] = u - d;
+                    let up = f[s];
+                    let down = f[s + m] * w;
+                    f[s] = up + down;
+                    f[s + m] = up - down;
                     w = w * base;
                 }
                 r += 2 * m;
@@ -132,8 +132,8 @@ mod tests {
 
     use super::*;
     use crate::{
-        fft::fft::convolution,
-        modint::modint::{Mod998, ModInt},
+        lib_fft::fft::convolution,
+        lib_modint::modint::{Mod998, ModInt},
     };
     use fft::DftRing;
 
@@ -153,10 +153,10 @@ mod tests {
 
     #[test]
     fn test_convolution_mod() {
-        let mut a: Vec<ModInt<Mod998>> = vec![8.into(), 6.into(), 9.into()];
-        let mut b = vec![1.into(), 2.into(), 0.into()];
+        let a: Vec<ModInt<Mod998>> = vec![8.into(), 6.into(), 9.into()];
+        let b = vec![1.into(), 2.into(), 0.into()];
         assert_eq!(
-            convolution(&mut a, &mut b),
+            convolution(&a, &b),
             vec![8.into(), 22.into(), 21.into(), 18.into(), 0.into()]
         );
     }

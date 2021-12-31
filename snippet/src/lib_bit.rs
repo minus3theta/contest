@@ -25,8 +25,10 @@ pub mod bit {
             let mut dat = vec![unit.clone()];
             dat.append(&mut v);
             for i in 1..n {
-                let j = i as i32;
-                let b = (j & -j) as usize;
+                let b = {
+                    let i = i as i32;
+                    (i & -i) as usize
+                };
                 let x = dat[i].clone();
                 if i + b <= n {
                     op(&mut dat[i + b], &x);
@@ -37,7 +39,7 @@ pub mod bit {
         pub fn operate(&mut self, k: usize, a: &T) {
             let mut k = k;
             while k <= self.n {
-                (self.op)(&mut self.dat[k], &a);
+                (self.op)(&mut self.dat[k], a);
                 let l = k as i32;
                 k += (l & -l) as usize;
             }

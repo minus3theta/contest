@@ -45,7 +45,7 @@ pub mod modint {
             }
             ret
         }
-        pub fn inv_fact(fact: &Vec<Self>) -> Vec<Self> {
+        pub fn inv_fact(fact: &[Self]) -> Vec<Self> {
             let n = fact.len() - 1;
             let mut ret = vec![0.into(); n + 1];
             ret[n] = fact[n].inv();
@@ -60,8 +60,8 @@ pub mod modint {
             (fact, inv_fact)
         }
         pub fn comb<'a>(
-            fact: &'a Vec<Self>,
-            inv_fact: &'a Vec<Self>,
+            fact: &'a [Self],
+            inv_fact: &'a [Self],
         ) -> impl Fn(usize, usize) -> Self + 'a {
             move |x, y| {
                 if y <= x {
@@ -74,6 +74,7 @@ pub mod modint {
     }
     impl<M: Mod, T: Into<ModInt<M>>> Add<T> for ModInt<M> {
         type Output = Self;
+        #[allow(clippy::suspicious_arithmetic_impl)]
         fn add(self, other: T) -> Self {
             let other = other.into();
             let sum = self.x + other.x;
@@ -82,6 +83,7 @@ pub mod modint {
     }
     impl<M: Mod, T: Into<ModInt<M>>> Sub<T> for ModInt<M> {
         type Output = Self;
+        #[allow(clippy::suspicious_arithmetic_impl)]
         fn sub(self, other: T) -> Self {
             let other = other.into();
             let sum = self.x - other.x;
@@ -97,6 +99,7 @@ pub mod modint {
     }
     impl<M: Mod, T: Into<ModInt<M>>> Div<T> for ModInt<M> {
         type Output = Self;
+        #[allow(clippy::suspicious_arithmetic_impl)]
         fn div(self, other: T) -> Self {
             let other = other.into();
             self * other.inv()
