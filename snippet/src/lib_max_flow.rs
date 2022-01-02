@@ -1,6 +1,7 @@
 use cargo_snippet::snippet;
 
 #[snippet(prefix = "use max_flow::*;")]
+#[snippet(prefix = "use MaxFlow;")]
 pub mod max_flow {
     use std::cell::Cell;
 
