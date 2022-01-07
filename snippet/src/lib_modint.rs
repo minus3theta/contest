@@ -8,7 +8,7 @@ pub mod modint {
         const MOD: i64;
     }
 
-    #[derive(Copy, Clone, Hash, Debug, PartialEq, Eq)]
+    #[derive(Copy, Clone, Hash, PartialEq, Eq)]
     pub struct ModInt<M> {
         x: i64,
         marker: std::marker::PhantomData<M>,
@@ -151,6 +151,11 @@ pub mod modint {
             iter.fold(1.into(), |acc, x| acc * x)
         }
     }
+    impl<M> std::fmt::Debug for ModInt<M> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "ModInt({})", self.x)
+        }
+    }
 
     #[derive(Debug, Clone, Copy, PartialEq, Eq)]
     pub enum Mod1e9 {}
@@ -167,4 +172,4 @@ pub mod modint {
 
 #[snippet(name = "mint")]
 #[snippet(include = "modint")]
-pub type MInt = modint::ModInt<modint::Mod1e9>;
+pub type MInt = modint::ModInt<modint::Mod998>;
