@@ -146,9 +146,19 @@ pub mod modint {
             iter.fold(0.into(), |acc, x| acc + x)
         }
     }
+    impl<'a, M: Mod> std::iter::Sum<&'a ModInt<M>> for ModInt<M> {
+        fn sum<I: Iterator<Item = &'a ModInt<M>>>(iter: I) -> Self {
+            iter.fold(0.into(), |acc, &x| acc + x)
+        }
+    }
     impl<M: Mod> std::iter::Product for ModInt<M> {
         fn product<I: Iterator<Item = Self>>(iter: I) -> Self {
             iter.fold(1.into(), |acc, x| acc * x)
+        }
+    }
+    impl<'a, M: Mod> std::iter::Product<&'a ModInt<M>> for ModInt<M> {
+        fn product<I: Iterator<Item = &'a ModInt<M>>>(iter: I) -> Self {
+            iter.fold(1.into(), |acc, &x| acc * x)
         }
     }
     impl<M> std::fmt::Debug for ModInt<M> {
