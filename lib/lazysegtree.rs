@@ -47,7 +47,7 @@ where
             dat,
             op,
             unit,
-            lazy: vec![identity.clone(); base],
+            lazy: vec![identity.clone(); 2 * base - 1],
             mapping,
             composition,
             identity,
