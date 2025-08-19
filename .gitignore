@@ -11,3 +11,4 @@
 .vscode/
 cargo/*/target/
 cargo/target/
+target/
