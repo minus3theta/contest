@@ -1,0 +1,83 @@
+---
+type: Batch
+timelimit: ~
+match: Lines
+
+cases:
+  - name: sample1
+    in: |
+      6 5
+      ahikst
+      aikot
+      5
+      asahi
+      okita
+      kiai
+      hash
+      it
+    out: |
+      Takahashi
+      Aoki
+      Unknown
+      Takahashi
+      Unknown
+  - name: sample2
+    in: |
+      7 6
+      ahiknst
+      ahikos
+      5
+      kioki
+      ohiki
+      tashi
+      nishi
+      kashi
+    out: |
+      Aoki
+      Aoki
+      Takahashi
+      Takahashi
+      Unknown
+  - name: sample3
+    in: |
+      13 11
+      defghiqsvwxyz
+      acejmoqrtwx
+      15
+      qhsqzhd
+      jcareec
+      wwqxqew
+      wxqxwex
+      jxxrtwa
+      trtqjxe
+      sqyggse
+      xxqwxew
+      xewwxxw
+      wwqxwex
+      xqqxqwq
+      qxxexxe
+      teqeroc
+      eeeqqee
+      vxdevyy
+    out: |
+      Takahashi
+      Aoki
+      Unknown
+      Unknown
+      Aoki
+      Aoki
+      Takahashi
+      Unknown
+      Unknown
+      Unknown
+      Unknown
+      Unknown
+      Aoki
+      Unknown
+      Takahashi
+
+extend:
+  - type: Text
+    path: "./b"
+    in: /in/*.txt
+    out: /out/*.txt
