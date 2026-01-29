@@ -19,13 +19,12 @@ pub mod segtree {
             }
         }
         pub fn from_vec(v: Vec<T>, op: F, unit: T) -> Self {
-            use std::iter::repeat;
+            use std::iter::repeat_n;
             let n = v.len();
             let base = n.next_power_of_two();
-            let mut dat: Vec<_> = repeat(unit.clone())
-                .take(base - 1)
-                .chain(v.into_iter())
-                .chain(repeat(unit.clone()).take(base - n))
+            let mut dat: Vec<_> = repeat_n(unit.clone(), base - 1)
+                .chain(v)
+                .chain(repeat_n(unit.clone(), base - n))
                 .collect();
             assert_eq!(dat.len(), 2 * base - 1);
             for i in (0..base - 1).rev() {
@@ -104,13 +103,12 @@ pub mod lazy_segtree {
             composition: C,
             identity: L,
         ) -> Self {
-            use std::iter::repeat;
+            use std::iter::repeat_n;
             let n = v.len();
             let base = n.next_power_of_two();
-            let mut dat: Vec<_> = repeat(unit.clone())
-                .take(base - 1)
-                .chain(v.into_iter())
-                .chain(repeat(unit.clone()).take(base - n))
+            let mut dat: Vec<_> = repeat_n(unit.clone(), base - 1)
+                .chain(v)
+                .chain(repeat_n(unit.clone(), base - n))
                 .collect();
             assert_eq!(dat.len(), 2 * base - 1);
             for i in (0..base - 1).rev() {
